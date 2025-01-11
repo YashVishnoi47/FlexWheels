@@ -4,8 +4,9 @@ import { Combobox, ComboboxOption } from "@headlessui/react";
 
 const SearchBar = () => {
   const handleSearch = () => {};
+
   const [query, setquery] = useState("");
-  const manufacturers = [
+  const carmanufacturers = [
     "Audi",
     "BMW",
     "Mercedes",
@@ -48,11 +49,12 @@ const SearchBar = () => {
     "Tesla",
     "Volvo",
   ];
+  const [manufacturers, setmanufacturers] = useState("");
 
   const filterManufacturers =
     query === ""
-      ? manufacturers
-      : manufacturers.filter((item) =>
+      ? carmanufacturers
+      : carmanufacturers.filter((item) =>
           item
             .toLowerCase()
             .replace(/\s/g, "")
@@ -62,23 +64,23 @@ const SearchBar = () => {
   return (
     <form className="w-full" onSubmit={handleSearch} action="">
       <div className="flex justify-start items-center">
-        <div className="search-bar w-full md:w-1/2 border-2 flex">
-
-
-          <Combobox>
+        {/* ComboBox Inside Search Bar */}
+        <div className="search-bar w-full md:w-1/2  flex">
+          <Combobox value={manufacturers} onChange={setmanufacturers}>
             <Combobox.Input
+              placeholder="Model (eg: Audi)"
               onChange={(event) => setquery(event.target.value)}
-              className="flex"
+              className="flex w-[50%] px-1 py-2 border-2 outline-none"
             />
 
-            <Combobox.Options className="absolute mt-10 p-2 w-[20%] bg-white border border-gray-300 rounded-md shadow-lg">
+            <Combobox.Options className="absolute flex flex-col gap-1  mt-10 p-2 w-[20%] bg-white border border-gray-300 rounded-md shadow-lg">
               {filterManufacturers.map((item) => (
                 <Combobox.Option
                   key={item}
                   className={({ active }) =>
                     `relative ${
                       active ? "bg-slate-200" : ""
-                    } cursor-default p-1 text-black h-auto gap-1  `
+                    } cursor-default p-1 text-black h-auto`
                   }
                   value={item}
                 >
@@ -87,8 +89,6 @@ const SearchBar = () => {
               ))}
             </Combobox.Options>
           </Combobox>
-
-         
         </div>
       </div>
     </form>
