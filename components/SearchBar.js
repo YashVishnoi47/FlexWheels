@@ -1,95 +1,69 @@
 "use client";
 import React, { useState } from "react";
-import { Combobox, ComboboxOption } from "@headlessui/react";
+import { useRouter } from "next/navigation";
+import SearchManu from "./SearchManu";
+import Image from "next/image";
 
 const SearchBar = () => {
-  const handleSearch = () => {};
-
-  const [query, setquery] = useState("");
-  const carmanufacturers = [
-    "Audi",
-    "BMW",
-    "Mercedes",
-    "Toyota",
-    "Honda",
-    "Ford",
-    "Chevrolet",
-    "Nissan",
-    "Volkswagen",
-    "Hyundai",
-    "Kia",
-    "Mazda",
-    "Subaru",
-    "Lexus",
-    "Jaguar",
-    "Porsche",
-    "Ferrari",
-    "Lamborghini",
-    "Bentley",
-    "Rolls-Royce",
-    "Mitsubishi",
-    "Peugeot",
-    "Renault",
-    "Fiat",
-    "Alfa Romeo",
-    "Aston Martin",
-    "Bugatti",
-    "Cadillac",
-    "Chrysler",
-    "Citroën",
-    "Dodge",
-    "Jeep",
-    "Land Rover",
-    "Maserati",
-    "Mini",
-    "Pagani",
-    "Ram",
-    "Saab",
-    "Suzuki",
-    "Tesla",
-    "Volvo",
-  ];
   const [manufacturers, setmanufacturers] = useState("");
+  const [model, setmodel] = useState("");
+  const router = useRouter();
 
-  const filterManufacturers =
-    query === ""
-      ? carmanufacturers
-      : carmanufacturers.filter((item) =>
-          item
-            .toLowerCase()
-            .replace(/\s/g, "")
-            .includes(query.toLowerCase().replace(/\s/g, ""))
-        );
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    if (manufacturers === "" || model === "") {
+      alert("Please enter a valid manufacturer and model");
+      return;
+    }
+
+    Updatesearchparams(model.toLowerCase(), manufacturers.toLowerCase());
+  };
+
+  const Updatesearchparams = (model, manufacturers) => {
+    const searchparams = new URLSearchParams(window.location.search);
+
+    if (model) {
+      searchparams.set("model", model);
+    } else {
+      searchparams.delete("model");
+    }
+    if (manufacturers) {
+      searchparams.set("manufacturers", manufacturers);
+    } else {
+      searchparams.delete("manufacturers");
+    }
+
+    const newpathname = `${
+      window.location.pathname
+    }?${searchparams.toString()}`;
+
+    router.push(newpathname);
+  };
 
   return (
     <form className="w-full" onSubmit={handleSearch} action="">
       <div className="flex justify-start items-center">
-        {/* ComboBox Inside Search Bar */}
-        <div className="search-bar w-full md:w-1/2  flex">
-          <Combobox value={manufacturers} onChange={setmanufacturers}>
-            <Combobox.Input
-              placeholder="Model (eg: Audi)"
-              onChange={(event) => setquery(event.target.value)}
-              className="flex w-[50%] px-1 py-2 border-2 outline-none"
-            />
-
-            <Combobox.Options className="absolute flex flex-col gap-1  mt-10 p-2 w-[20%] bg-white border border-gray-300 rounded-md shadow-lg">
-              {filterManufacturers.map((item) => (
-                <Combobox.Option
-                  key={item}
-                  className={({ active }) =>
-                    `relative ${
-                      active ? "bg-slate-200" : ""
-                    } cursor-default p-1 text-black h-auto`
-                  }
-                  value={item}
-                >
-                  {item}
-                </Combobox.Option>
-              ))}
-            </Combobox.Options>
-          </Combobox>
-        </div>
+        {/* Search Bar for manufacturers */}
+        <SearchManu
+          manufacturers={manufacturers}
+          setmanufacturers={setmanufacturers}
+          model={model}
+          setmodel={setmodel}
+        />
+        {/* Search Button */}
+        <button
+          type="submit"
+          className="text-white transition-all duration-200 ease-in-out py-1 px-1 rounded-full"
+        >
+          <Image
+            src="magnifying-glass.svg"
+            width={30}
+            height={30}
+            alt="search"
+            className="object-contain"
+          />
+        </button>
       </div>
     </form>
   );

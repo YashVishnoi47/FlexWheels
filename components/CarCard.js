@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import CarDetails from "./CarDetails";
 
-const CarCard = ({ car }) => {
+const CarCard = ({ car, url }) => {
   const {
     city_mpg,
     highway_mpg,
@@ -17,11 +17,13 @@ const CarCard = ({ car }) => {
     drive,
   } = car;
 
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="mt-12 bg-[#F5F8FE] cursor-pointer  hover:bg-white hover:rounded-none transition-all duration-200 ease-in-out  relative items-center flex flex-col gap-8 w-full max-w-[25%] h-[85%]  px-4 py-6 shadow-lg rounded-2xl" onClick={() => setIsOpen(true)}>
+    <div
+      className="mt-2 bg-[#F5F8FE] cursor-pointer  hover:bg-white hover:rounded-none transition-all duration-200 ease-in-out  relative items-center flex flex-col gap-8 w-full max-w-[25%] h-[40%]  px-4 py-4 shadow-lg   rounded-2xl"
+      onClick={() => setIsOpen(true)}
+    >
       <div className="name w-full text-center">
         <h1 className="font-semibold text-2xl capitalize">{model}</h1>
         <p className="text-gray-500">
@@ -35,11 +37,11 @@ const CarCard = ({ car }) => {
         </h3>
       </div>
 
-      <div className="image  relative flex justify-center w-[80%] h-44">
+      <div className="image relative flex justify-center w-[80%] h-44">
         <Image
-          src="/hero.png"
+          src={url || "/hero.png"}
           layout="fill"
-          objectFit="cover"
+          objectFit="contain"
           priority
           alt={model}
           className="rounded-lg"
